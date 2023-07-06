@@ -1,0 +1,12 @@
+version: '3'
+networks:
+  nodejs_secops_pipeline:
+    external: true
+services:
+  nodejsapp:
+    image: nodejsapp
+    container_name: nodejsapp
+    networks:
+      - nodejs_secops_pipeline
+    ports:
+      - 3000:3000

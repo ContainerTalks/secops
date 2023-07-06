@@ -1,0 +1,17 @@
+version: '3'
+networks:
+  nodejs_secops_pipeline:
+    external: true
+volumes:
+  nexus-data:
+services:
+  nexus:
+    image: sonatype/nexus3:latest
+    restart: always
+    container_name: nexus
+    networks:
+      - nodejs_secops_pipeline
+    ports:
+      - 8081:8081
+    volumes:
+      - nexus-data:/nexus-data

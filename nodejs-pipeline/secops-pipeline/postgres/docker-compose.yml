@@ -1,0 +1,19 @@
+version: '3'
+networks:
+  nodejs_secops_pipeline:
+    external: true
+volumes:
+  nodejs_secops_pipeline_db:
+services:
+  nodejs_secops_pipeline_db:
+    image: postgres:15
+    container_name: nodejs_secops_pipeline_db
+    restart: always
+    networks:
+      - nodejs_secops_pipeline
+    environment:
+      - POSTGRES_USER=nodejs_secops_pipeline_db_user
+      - POSTGRES_PASSWORD=nodejs_secops_pipeline_db_pwd
+      - POSTGRES_DB=nodejs_secops_pipeline_db
+    volumes:
+      - nodejs_secops_pipeline_db:/var/lib/postgresql/data

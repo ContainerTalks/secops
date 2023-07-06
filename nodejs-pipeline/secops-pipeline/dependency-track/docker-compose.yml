@@ -1,0 +1,50 @@
+version: '3.7'
+volumes:
+  dependency_track:
+networks:
+  nodejs_secops_pipeline:
+    external: true
+services:
+  dependencytrack_apiserver:
+    image: dependencytrack/apiserver
+    container_name: dependencytrack_api
+    networks:
+      - nodejs_secops_pipeline
+    environment:
+      - ALPINE_DATABASE_DRIVER=org.postgresql.Driver
+      - ALPINE_DATABASE_USERNAME=nodejs_secops_pipeline_db_user
+      - ALPINE_DATABASE_PASSWORD=nodejs_secops_pipeline_db_pwd
+      - ALPINE_DATABASE_POOL_ENABLED=true
+      - ALPINE_DATABASE_POOL_MAX_SIZE=20
+      - ALPINE_DATABASE_URL=jdbc:postgresql://nodejs_secops_pipeline_db:5432/nodejs_secops_pipeline_db
+      - ALPINE_DATABASE_POOL_MIN_IDLE=10
+      - ALPINE_DATABASE_POOL_IDLE_TIMEOUT=300000
+      - ALPINE_DATABASE_POOL_MAX_LIFETIME=600000
+      # - JAVA_OPTS=-Xmx8G -XX:+UseG1GC
+      - EXTRA_JAVA_OPTIONS=-Xmx4G
+    deploy:
+      resources:
+        limits:
+          memory: 12288m
+        reservations:
+          memory: 8192m
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '8066:8080'
+    volumes:
+      - 'dependency_track:/data'
+    restart: unless-stopped
+
+  dependencytrack_frontend:
+    image: dependencytrack/frontend
+    container_name: dependencytrack_frontend
+    networks:
+      - nodejs_secops_pipeline
+    depends_on:
+      - dependencytrack-apiserver
+    environment:
+      - API_BASE_URL=http://localhost:8081
+    ports:
+      - "8067:8080"
+    restart: unless-stopped

@@ -1,0 +1,28 @@
+version: '3'
+networks:
+  nodejs_secops_pipeline:
+    external: true
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+services:
+  sonarqube:
+    image: sonarqube:lts-community
+    restart: always
+    container_name: sonarqube
+    networks:
+      - nodejs_secops_pipeline
+    ports:
+      - 9000:9000
+    environment:
+      - SONAR_JDBC_URL=jdbc:postgresql://nodejs_secops_pipeline_db:5432/nodejs_secops_pipeline_db
+      - SONAR_JDBC_USERNAME=nodejs_secops_pipeline_db_user
+      - SONAR_JDBC_PASSWORD=nodejs_secops_pipeline_db_pwd
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+      - sonarqube_temp:/opt/sonarqube/temp
+      - ../application:/opt/sonarqube/app
