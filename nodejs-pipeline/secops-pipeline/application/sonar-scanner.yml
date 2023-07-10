@@ -1,0 +1,15 @@
+version: '3'
+networks:
+  nodejs_secops_pipeline:
+
+services:
+  sonar-scanner:
+    image: sonarsource/sonar-scanner-cli
+    container_name: sonarsource_sonar_scanner
+    environment:
+      - SONAR_HOST_URL=http://sonarqube:9000
+      - SONAR_SCANNER_OPTS=-Dsonar.projectKey=nodejs-application -Dsonar.sources=/usr/src -Dsonar.login=sqp_5a911cd5f7988281f51be8a0f78ebc5a5a24164d
+    volumes:
+      - .:/usr/src
+    networks:
+      - nodejs_secops_pipeline

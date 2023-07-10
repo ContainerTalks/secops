@@ -22,6 +22,13 @@ services:
       - ALPINE_DATABASE_POOL_MAX_LIFETIME=600000
       # - JAVA_OPTS=-Xmx8G -XX:+UseG1GC
       - EXTRA_JAVA_OPTIONS=-Xmx4G
+      - ALPINE_CORS_ENABLED=true
+      - ALPINE_CORS_ALLOW_ORIGIN=*
+      - ALPINE_CORS_ALLOW_METHODS=GET, POST, PUT, DELETE, OPTIONS
+      - ALPINE_CORS_ALLOW_HEADERS=Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count, *
+      - ALPINE_CORS_EXPOSE_HEADERS=Origin, Content-Type, Authorization, X-Requested-With, Content-Length, Accept, Origin, X-Api-Key, X-Total-Count
+      - ALPINE_CORS_ALLOW_CREDENTIALS=true
+      - ALPINE_CORS_MAX_AGE=3600
     deploy:
       resources:
         limits:
@@ -31,7 +38,7 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - '8066:8080'
+      - '8080:8080'
     volumes:
       - 'dependency_track:/data'
     restart: unless-stopped
@@ -44,7 +51,7 @@ services:
     depends_on:
       - dependencytrack-apiserver
     environment:
-      - API_BASE_URL=http://localhost:8081
+      - API_BASE_URL=http://localhost:8080
     ports:
-      - "8067:8080"
+      - "9002:8080"
     restart: unless-stopped
