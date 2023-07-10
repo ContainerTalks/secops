@@ -152,6 +152,19 @@ curl -X "POST" "http://localhost:8080/api/v1/bom" \
 **Command**: `trivy image <image-name>`
 
 ```bash
+# Complicated and multi vulnerability image
+
+trivy image --scanners vuln,config,secret --severity HIGH,CRITICAL --format cyclonedx  --output application_config_scan_report.xml vibhuvi-session-ng
+
+cyclonedx-py -e --in-file application_config_scan_report.xml --output  application_config_scan_report_cyclonedx.xml --format xml
+
+curl -X "POST" "http://localhost:8080/api/v1/bom" \
+    -H 'Content-Type: multipart/form-data' \
+    -H "X-Api-Key: O7u6AHQoaCViyg1CTu7rSva1rSP16vAm" \
+    -F "project=50305e82-d257-47d7-aaa1-8e8bc786e29d" \
+    -F "bom=@application_config_scan_report_cyclonedx.xml"
+
+# Simple example
 trivy image  --format cyclonedx --output application_image_result.json --scanners vuln redis:6.2.7-alpine
 
 cyclonedx-py -e --in-file application_image_result.json --output  application_image_result.xml --format xml
