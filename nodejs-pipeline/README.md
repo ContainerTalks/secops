@@ -11,11 +11,12 @@
   - Scan local filesystem(`trivy filesystem --dir /path/to/directory`)
   - Scan a container image(`trivy image <image-name>`)
   - Scan rootfs(`trivy rootfs --root /path/to/rootfs`)
-- NMA
+- SCA with owasp dependency check 
+- NMAP
 - Arachni
 - OWASP Zap
 - Dependency Track
--
+
 
 ### Steps
 
@@ -24,7 +25,7 @@
 3. Run Sonarqube
 4. Integrate Sonarqube
 5. Run CICD Tool(Jenkins)
-6.
+6. 
 7. Enable SAST with SonarQube
 8. Install Trivy
 
@@ -206,6 +207,12 @@ curl -X "PUT" "http://dtrack.example.com/api/v1/bom"\
 (`trivy rootfs --root /path/to/rootfs`)
 
 O7u6AHQoaCViyg1CTu7rSva1rSP16vAm
+
+## SCA Scan 
+
+```bash
+sh sca-scan.sh
+```
 
 #### API Integration
 
