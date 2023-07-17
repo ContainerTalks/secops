@@ -1,6 +1,8 @@
 # SecOps (Security Operations)
 
-1.  NodeJs DevSecOps Pipeline
+
+
+1. NodeJs DevSecOps Pipeline
 
 popular open-source tools categorized by SecOps components:
 
@@ -42,3 +44,6 @@ Security Information and Event Management (SIEM):
 Elastic Stack: An open-source solution that includes Elasticsearch, Logstash, Kibana, and Beats for log management and analysis.
 Graylog: A centralized log management and analysis tool.
 OSSIM (Open Source Security Information Management): A comprehensive SIEM platform.
+
+
+docker run -u zap -p 8080:8080 -i owasp/zap2docker-stable zap.sh -daemon -port 8080 -host 0.0.0.0 -config api.disablekey=true

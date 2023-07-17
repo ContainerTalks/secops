@@ -84,6 +84,28 @@ docker-compose up -d
 ```bash
 docker run --rm --network nodejs_secops_pipeline -e SONAR_HOST_URL="http://sonarqube:9000" -v /Volumes/project/Docker-X/secops/nodejs-pipeline/secops-pipeline/application:/usr/src sonarsource/sonar-scanner-cli
 ```
+```
+docker run --rm --network nodejs_secops_pipeline \
+  -e SONAR_HOST_URL="http://sonarqube:9000" \
+  -e SONAR_LOGIN="sqp_885c5c8d7f12b7bdff0f19d3a0642d4bd668d40d" \
+  -v /Volumes/project/Docker-X/secops/nodejs-pipeline/secops-pipeline/application:/usr/src \
+  sonarsource/sonar-scanner-cli
+
+```
+- Report to the json 
+
+```bash
+docker run --rm --network nodejs_secops_pipeline \
+  -e SONAR_HOST_URL="http://sonarqube:9000" \
+  -e SONAR_LOGIN="sqp_885c5c8d7f12b7bdff0f19d3a0642d4bd668d40d" \
+  -e SONAR_REPORT_EXPORT_PATH="/report/report.json" \
+  -v /Volumes/project/Docker-X/secops/nodejs-pipeline/secops-pipeline/application:/usr/src \
+  -v /Volumes/project/Docker-X/secops/nodejs-pipeline/secops-pipeline/report:/report \
+  sonarsource/sonar-scanner-cli \
+  -Dsonar.projectKey=application \
+  -Dsonar.sources=/usr/src \
+
+```
 
 ## Dependency Track - Continuous SBOM Analysis Platform
 
@@ -124,6 +146,13 @@ Website:
 
 Read more about
 [Scan Coverage of Trivy](https://aquasecurity.github.io/trivy/v0.43/getting-started/coverage/).
+
+## Prerequisites
+- Dependency Track API Key and Project ID. 
+```bash
+API_ENDPOINT="http://localhost:8080/api/v1/"
+API_KEY="O7u6AHQoaCViyg1CTu7rSva1rSP16vAm"
+```
 
 ### Misconfiguration Check
 
@@ -178,55 +207,11 @@ cyclonedx-py -e --in-file application_image_result.json --output  application_im
 ```bash
 trivy rootfs /
 ```
-
-# Set the Dependency Track API endpoint and API key
-
-API_ENDPOINT="http://localhost:8080/api/v1/"
-API_KEY="O7u6AHQoaCViyg1CTu7rSva1rSP16vAm"
-
-# Call the Dependency Track API to upload the scan results
-
-curl -X "POST" "http://localhost:8080/api/v1/bom"\
--H 'Content-Type: multipart/form-data'\
--H "X-Api-Key: O7u6AHQoaCViyg1CTu7rSva1rSP16vAm"\
--F "autoCreate=true"\
--F "projectName=SampleAppOne"\
--F "projectVersion=01.SNAPSHOT"\
--F "bom=./result.json"
-
-a059a864-f44c-484f-86ca-d3712438f112
-
-curl -X "PUT" "http://dtrack.example.com/api/v1/bom"\
--H 'Content-Type: application/json'\
--H 'X-API-Key: O7u6AHQoaCViyg1CTu7rSva1rSP16vAm'\
--d $'{ "project": "a059a864-f44c-484f-86ca-d3712438f112", "bom": "PD94bWwgdm..."
-}'
-
-### Scan rootfs
-
-(`trivy rootfs --root /path/to/rootfs`)
-
-O7u6AHQoaCViyg1CTu7rSva1rSP16vAm
-
-## SCA Scan 
+# SCA Scan 
 
 ```bash
 sh sca-scan.sh
 ```
-
-#### API Integration
-
-```bash
-curl -X "POST" "http://localhost:8080/api/v1/bom" \
-     -H 'Content-Type: multipart/form-data' \
-     -H "X-Api-Key: O7u6AHQoaCViyg1CTu7rSva1rSP16vAm" \
-     -F "project=a059a864-f44c-484f-86ca-d3712438f112" \
-      -F "bom=@target/bom.xml"
-```
-- convert the json to xml 
-
-cyclonedx-py -e --in-file redis_result.json --output  redis_result.xml --format xml
-
 
 ## Run SonaType Nexus
 
